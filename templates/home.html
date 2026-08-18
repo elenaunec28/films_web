@@ -1,0 +1,77 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+    <p>В базе фильмы с {{ years.min_year }} по {{ years.max_year }}</p>
+
+    <h6 class="text-muted">Доступные жанры:</h6>
+    <div class="mb-4">
+        {% for genre in genres %}
+            <span class="badge bg-primary me-1 mb-1">{{ genre }}</span>
+        {% endfor %}
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Поиск по ключевому слову</h5>
+            <form method="post" action="/search/keyword">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control"
+                           placeholder="Введите ключевое слово" required>
+                    <button type="submit" class="btn btn-primary">Найти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Поиск по жанру</h5>
+            <form method="post" action="/search/genre-only">
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <select name="genre" class="form-select" required>
+                            <option value="">Выберите жанр</option>
+                            {% for genre in genres %}
+                                <option value="{{ genre }}">{{ genre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Найти</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Поиск по жанру и годам</h5>
+            <form method="post" action="/search/genre">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <select name="genre" class="form-select" required>
+                            <option value="">Выберите жанр</option>
+                            {% for genre in genres %}
+                                <option value="{{ genre }}">{{ genre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="year_from" class="form-control"
+                               min="{{ years.min_year }}" max="{{ years.max_year }}"
+                               value="{{ years.min_year }}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" name="year_to" class="form-control"
+                               min="{{ years.min_year }}" max="{{ years.max_year }}"
+                               value="{{ years.max_year }}" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Найти</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

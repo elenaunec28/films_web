@@ -1,0 +1,52 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+    <p>Найдено фильмов: {{ total }}</p>
+
+    {% if films %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Год</th>
+                <th>Жанр</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for film in films %}
+                <tr>
+                    <td>{{ film.title }}</td>
+                    <td>{{ film.release_year }}</td>
+                    <td>{{ film.genre }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% set base = "/search/keyword?keyword=" ~ keyword if keyword
+                      else "/search/genre?genre=" ~ genre ~
+                           "&year_from=" ~ year_from ~ "&year_to=" ~ year_to %}
+
+        {% set base = "/search/keyword?keyword=" ~ keyword if keyword
+                      else "/search/genre?genre=" ~ genre ~
+                           "&year_from=" ~ year_from ~ "&year_to=" ~ year_to %}
+
+        <nav class="mb-3">
+            {% if page > 1 %}
+                <a href="{{ base }}&page={{ page - 1 }}"
+                   class="btn btn-outline-primary">← Назад</a>
+            {% endif %}
+
+            <span class="mx-2">Страница {{ page }} из {{ pages }}</span>
+
+            {% if page < pages %}
+                <a href="{{ base }}&page={{ page + 1 }}"
+                   class="btn btn-outline-primary">Вперёд →</a>
+            {% endif %}
+        </nav>
+    {% else %}
+        <p class="text-muted">Ничего не найдено.</p>
+    {% endif %}
+
+    <a href="/" class="btn btn-secondary">Новый поиск</a>
+{% endblock %}

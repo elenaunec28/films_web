@@ -1,0 +1,49 @@
+{% extends "base_page.html" %}
+
+{% block content %}
+    <div class="mb-3">
+        <a href="/stats?kind=popular"
+           class="btn {% if kind == 'popular' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            По частоте
+        </a>
+        <a href="/stats?kind=recent"
+           class="btn {% if kind == 'recent' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            По последним поискам
+        </a>
+    </div>
+
+    <h2>{{ title }}</h2>
+
+    {% if items %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Тип поиска</th>
+                <th>Параметры</th>
+                <th>Найдено</th>
+                {% if kind == 'popular' %}<th>Раз</th>{% endif %}
+                <th>Время</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item._id.search_type }}</td>
+                    <td>
+                        {% for key, value in item._id.params.items() %}
+                            {{ key }}: {{ value }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ item.results_count }}</td>
+                    {% if kind == 'popular' %}<td>{{ item.count }}</td>{% endif %}
+                    <td>{{ item.last_time.strftime("%d.%m.%Y %H:%M") }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">Статистика пока пуста.</p>
+    {% endif %}
+
+    <a href="/" class="btn btn-secondary">К поиску</a>
+{% endblock %}
