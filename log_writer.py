@@ -6,6 +6,7 @@ from pymongo.errors import PyMongoError
 from local_settings import MONGODB_URL_WRITE
 
 def get_mongo_connection():
+    """Подключается к MongoDB и возвращает коллекцию для логов."""
     client = MongoClient(MONGODB_URL_WRITE)
 
     db = client["ich_edit"]
@@ -16,6 +17,7 @@ def get_mongo_connection():
 
 
 def save_search_log(search_type, params, results_count):
+    """Записывает информацию о поисковом запросе в MongoDB."""
     log = {
         "timestamp": datetime.now(),
         "search_type": search_type,

@@ -22,11 +22,13 @@ templates = Jinja2Templates(directory="templates")
 
 PER_PAGE = 10
 
-def error_page(request, message):
+
+def error_page(request, message, status_code=503):
     """Возвращает страницу с сообщением об ошибке."""
     return templates.TemplateResponse(request, "error.html", {
         "message": message,
-    }, status_code=503)
+    }, status_code=status_code)
+
 
 @app.get("/")
 def home(request: Request):
@@ -49,12 +51,12 @@ def search_keyword(request: Request, keyword: str = Form(...)):
     """Поиск по ключевому слову, первая страница результатов."""
     keyword = keyword.strip().lower()
     if not keyword:
-        return error_page(request, "Введите ключевое слово для поиска.")
+        return error_page(request, "Введите ключевое слово для поиска.", 400)
 
     try:
         with get_sql_connection() as connection:
-            total = count_by_keyword(connection, keyword)
-            films = search_by_keyword(connection, keyword, limit=PER_PAGE, offset=0)
+            total = count_by_keyword(connection, keyword) # COUNT(*), без LIMIT
+            films = search_by_keyword(connection, keyword, limit=PER_PAGE, offset=0) # с LIMIT
 
     except pymysql.MySQLError as e:
         return error_page(request, f"База данных недоступна: {e}")
@@ -193,8 +195,8 @@ def stats(request: Request, kind: str = "popular"):
         else:
             items = get_popular_searches()
             title = "Топ-5 популярных запросов"
-    except PyMongoError as error:
-        print(f"Ошибка MongoDB: {error}")
+    except PyMongoError as e:
+        print(f"Ошибка MongoDB: {e}")
         return error_page(request, "Не удалось получить статистику: "
                                    "база логов недоступна.")
 

@@ -3,11 +3,14 @@ from local_settings import dbconfig
 
 
 def get_sql_connection():
+    """Создаёт подключение к MySQL с курсором, возвращающим словари."""
     connection = pymysql.connect(
         **dbconfig,
         cursorclass=pymysql.cursors.DictCursor
     )
     return connection
+
+
 def execute_query(connection, query, params=None, fetch_one=False):
     """
     fetch_one=True — вернуть одну строку (словарь или None),
@@ -19,7 +22,9 @@ def execute_query(connection, query, params=None, fetch_one=False):
             return cursor.fetchone()
         return cursor.fetchall()
 
+
 def search_by_keyword(connection, keyword, limit=10, offset=0):
+    """Возвращает фильмы, у которых ключевое слово встречается в названии."""
     query = """
         SELECT
             film.film_id,
@@ -39,7 +44,9 @@ def search_by_keyword(connection, keyword, limit=10, offset=0):
 
     return execute_query(connection, query, (search_pattern, limit, offset))
 
+
 def get_all_genres(connection):
+    """Возвращает список названий всех жанров."""
     query = """
         SELECT name 
         FROM category
@@ -51,6 +58,7 @@ def get_all_genres(connection):
 
 
 def get_year_range(connection):
+    """Возвращает минимальный и максимальный год выпуска в базе."""
     query = """
         SELECT MIN(release_year) AS min_year, MAX(release_year) AS max_year
         FROM film
@@ -58,7 +66,10 @@ def get_year_range(connection):
 
     return execute_query(connection, query, fetch_one=True)
 
-def search_by_genre_and_year(connection, genre, start_year, end_year, limit=10, offset=0):
+
+def search_by_genre_and_year(connection, genre, start_year, end_year,
+                                                limit=10, offset=0):
+    """Возвращает фильмы указанного жанра за диапазон годов."""
     query = """
         SELECT 
             film.film_id,
@@ -82,7 +93,7 @@ def search_by_genre_and_year(connection, genre, start_year, end_year, limit=10, 
 
 
 def count_by_keyword(connection, keyword):
-    #Возвращает количество фильмов, по ключевому слову.
+    """Возвращает количество фильмов, по ключевому слову."""
     query = """
         SELECT COUNT(*) AS total
         FROM film
@@ -95,7 +106,7 @@ def count_by_keyword(connection, keyword):
 
 
 def count_by_genre_and_year(connection, genre, start_year, end_year):
-    # Количество фильмов по жанру и диапазону годов.
+    """Возвращает количество фильмов по жанру и диапазону годов."""
     query = """
         SELECT COUNT(*) AS total
         FROM film
@@ -110,6 +121,7 @@ def count_by_genre_and_year(connection, genre, start_year, end_year):
     result = execute_query(connection, query, params, fetch_one=True)
 
     return result['total']
+
 
 if __name__ == "__main__":
     with get_sql_connection() as connection:

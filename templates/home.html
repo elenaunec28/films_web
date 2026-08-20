@@ -28,7 +28,7 @@
             <h5 class="card-title">Поиск по жанру</h5>
             <form method="post" action="/search/genre-only">
                 <div class="row g-2">
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <select name="genre" class="form-select" required>
                             <option value="">Выберите жанр</option>
                             {% for genre in genres %}
@@ -37,7 +37,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Найти</button>
+                        <button type="submit" class="btn btn-secondary w-100">Найти</button>
                     </div>
                 </div>
             </form>
@@ -68,7 +68,7 @@
                                value="{{ years.max_year }}" required>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Найти</button>
+                        <button type="submit" class="btn btn-info w-100">Найти</button>
                     </div>
                 </div>
             </form>
