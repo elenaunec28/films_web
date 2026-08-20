@@ -205,3 +205,9 @@ def stats(request: Request, kind: str = "popular"):
         "title": title,
         "kind": kind,
     })
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("main:app", reload=True)
