@@ -1,5 +1,3 @@
-from pymongo.errors import PyMongoError
-
 from log_writer import get_mongo_connection
 
 
@@ -22,7 +20,6 @@ def get_recent_searches(limit=5):
     return list(collection.aggregate(pipeline))
 
 
-
 def get_popular_searches(limit=5):
     """Возвращает самые частые поисковые запросы.
     Группирует одинаковые запросы (тип + параметры) и считает,
@@ -43,7 +40,6 @@ def get_popular_searches(limit=5):
 
     collection = get_mongo_connection()
     return list(collection.aggregate(pipeline))
-
 
 
 if __name__ == "__main__":
